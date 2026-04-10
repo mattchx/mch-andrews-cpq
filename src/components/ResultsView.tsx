@@ -4,6 +4,7 @@ import { calculateRiskScore } from '../lib/scoring'
 import { generateRecommendations, type Recommendation } from '../lib/recommendations'
 import { exportPdf } from '../lib/exportPdf'
 import { exportDocx } from '../lib/exportDocx'
+import { exportText } from '../lib/exportText'
 
 interface ResultsViewProps {
   answers: Record<string, string | string[]>
@@ -17,13 +18,8 @@ export function ResultsView({ answers, onRestart, onEdit }: ResultsViewProps) {
   const clientName = (answers.fullName as string) || 'Client'
   const [exporting, setExporting] = useState<string | null>(null)
 
-  async function handleExportPdf() {
-    setExporting('pdf')
-    try {
-      await exportPdf('results-content', clientName)
-    } finally {
-      setExporting(null)
-    }
+  function handleExportPdf() {
+    exportPdf()
   }
 
   async function handleExportDocx() {
@@ -33,6 +29,10 @@ export function ResultsView({ answers, onRestart, onEdit }: ResultsViewProps) {
     } finally {
       setExporting(null)
     }
+  }
+
+  function handleExportText() {
+    exportText(answers)
   }
 
   return (
@@ -57,13 +57,21 @@ export function ResultsView({ answers, onRestart, onEdit }: ResultsViewProps) {
           <div className="flex gap-2">
             <button
               onClick={handleExportPdf}
-              disabled={exporting !== null}
-              className="inline-flex items-center gap-2 bg-navy hover:bg-navy-dark text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-2 bg-navy hover:bg-navy-dark text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              Save PDF
+            </button>
+            <button
+              onClick={handleExportText}
+              className="inline-flex items-center gap-2 bg-white hover:bg-cream-dark text-navy-dark text-sm font-medium py-2 px-4 rounded-lg border border-gray-200 transition-colors cursor-pointer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              {exporting === 'pdf' ? 'Generating...' : 'Download PDF'}
+              Download TXT
             </button>
             <button
               onClick={handleExportDocx}
@@ -71,7 +79,7 @@ export function ResultsView({ answers, onRestart, onEdit }: ResultsViewProps) {
               className="inline-flex items-center gap-2 bg-white hover:bg-cream-dark text-navy-dark text-sm font-medium py-2 px-4 rounded-lg border border-gray-200 transition-colors cursor-pointer disabled:opacity-50"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               {exporting === 'docx' ? 'Generating...' : 'Download DOCX'}
             </button>
