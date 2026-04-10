@@ -1,4 +1,4 @@
-export type QuestionType = 'text' | 'select' | 'multiselect' | 'number' | 'scale' | 'textarea'
+export type QuestionType = 'text' | 'date' | 'select' | 'multiselect' | 'number' | 'scale' | 'textarea'
 
 export interface Option {
   label: string
@@ -43,8 +43,7 @@ export const sections: QuestionSection[] = [
       {
         id: 'dateOfBirth',
         label: 'Date of Birth',
-        type: 'text',
-        placeholder: 'e.g. January 15, 1970',
+        type: 'date',
         required: true,
       },
       {

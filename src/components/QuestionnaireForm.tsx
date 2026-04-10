@@ -165,6 +165,15 @@ function QuestionField({ question, value, note, onChange, onToggle, onNoteChange
         />
       )}
 
+      {question.type === 'date' && (
+        <input
+          type="date"
+          className={baseInputClass}
+          value={(value as string) || ''}
+          onChange={e => onChange(e.target.value)}
+        />
+      )}
+
       {question.type === 'number' && (
         <input
           type="number"
